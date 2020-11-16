@@ -20,6 +20,8 @@ import (
 
 	"github.com/cilium/cilium/pkg/datapath"
 	"github.com/cilium/cilium/pkg/datapath/loader/metrics"
+
+	"github.com/cilium/ebpf"
 )
 
 type fakeDatapath struct {
@@ -132,6 +134,6 @@ func (f *fakeLoader) Reinitialize(ctx context.Context, o datapath.BaseProgramOwn
 	return nil
 }
 
-func (f *fakeDatapath) SetupIPVLAN(netNS string) (int, int, error) {
-	return 0, 0, nil
+func (f *fakeDatapath) SetupIPVLAN(netNS string) (*ebpf.Map, error) {
+	return nil, nil
 }

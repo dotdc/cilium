@@ -14,6 +14,8 @@
 
 package datapath
 
+import "github.com/cilium/ebpf"
+
 // Datapath is the interface to abstract all datapath interactions. The
 // abstraction allows to implement the datapath requirements with multiple
 // implementations
@@ -33,7 +35,7 @@ type Datapath interface {
 	Loader() Loader
 
 	// SetupIPVLAN sets up IPVLAN in the specified network namespace. Returns
-	// the file descriptor for the tail call map / ID, and an error if any
-	// operation while configuring said namespace fails.
-	SetupIPVLAN(netNS string) (int, int, error)
+	// the tail call map and an error if any operation while configuring
+	// said namespace fails.
+	SetupIPVLAN(netNS string) (*ebpf.Map, error)
 }

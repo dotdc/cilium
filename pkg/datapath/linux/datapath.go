@@ -20,6 +20,8 @@ import (
 	"github.com/cilium/cilium/pkg/datapath/linux/config"
 	"github.com/cilium/cilium/pkg/datapath/loader"
 	"github.com/cilium/cilium/pkg/logging/logfields"
+
+	"github.com/cilium/ebpf"
 )
 
 // DatapathConfiguration is the static configuration of the datapath. The
@@ -76,6 +78,6 @@ func (l *linuxDatapath) Loader() datapath.Loader {
 	return l.loader
 }
 
-func (l *linuxDatapath) SetupIPVLAN(netNS string) (int, int, error) {
+func (l *linuxDatapath) SetupIPVLAN(netNS string) (*ebpf.Map, error) {
 	return connector.ConfigureNetNSForIPVLAN(netNS)
 }

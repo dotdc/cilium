@@ -1487,18 +1487,21 @@ func (e *Endpoint) FinishIPVLANInit(netNsPath string) error {
 		return nil
 	}
 
-	mapFD, mapID, err := e.owner.Datapath().SetupIPVLAN(netNsPath)
+	m, err := e.owner.Datapath().SetupIPVLAN(netNsPath)
 	if err != nil {
 		return fmt.Errorf("Unable to setup ipvlan slave: %s", err)
 	}
 
 	// Do not close the fd too early, as the subsequent pinning would
 	// fail due to the map being removed by the kernel
-	defer func() {
-		unix.Close(mapFD)
-	}()
+	defer m.Close()
 
-	if err = e.setDatapathMapIDAndPinMap(mapID); err != nil {
+	mapID, err := m.ID()
+	if err != nil {
+		return fmt.Errorf("failed to get map ID: %w", err)
+	}
+
+	if err = e.setDatapathMapIDAndPinMap(int(mapID)); err != nil {
 		return fmt.Errorf("Unable to pin datapath map: %s", err)
 	}
 
